@@ -141,12 +141,13 @@
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnEntrar"
+        android:id="@+id/buttonLogin"
         android:layout_width="266dp"
         android:layout_height="35dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/button_primary_background"
         android:backgroundTint="@null"
+        android:onClick="onLogin"
         android:text="Entrar"
         android:textAllCaps="false"
         android:textColor="#000000"
@@ -167,7 +168,7 @@
         android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnEntrar">
+        app:layout_constraintTop_toBottomOf="@+id/buttonLogin">
 
         <ImageView
             android:id="@+id/googleIcon"
