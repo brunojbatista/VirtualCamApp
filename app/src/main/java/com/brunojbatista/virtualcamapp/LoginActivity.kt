@@ -6,11 +6,29 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.brunojbatista.virtualcamapp.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
+
+    private val binding by lazy {
+        ActivityLoginBinding.inflate( layoutInflater )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login) // usa o layout que você já criou
+        setContentView( binding.root )
+        initializeEvents()
+    }
+
+    private fun initializeEvents() {
+
+        // Evento do botão de cadastrar
+        binding.signInHere.setOnClickListener {
+            startActivity(
+                Intent(this, SignupActivity::class.java)
+            )
+        }
+
     }
 
     fun onLogin(view: View) {
