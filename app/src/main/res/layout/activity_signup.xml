@@ -128,16 +128,17 @@
             android:hint=""
             app:hintEnabled="false">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputName"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/button_input_background"
-                android:hint="Digite seu nome"
-                android:padding="12dp"
-                android:textColorHint="#888888"
-                android:textSize="10sp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputName"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/button_input_background"
+            android:hint="Digite seu nome"
+            android:padding="12dp"
+            android:textColorHint="#888888"
+            android:textSize="10sp" />
     </LinearLayout>
 
     <TextView
