@@ -63,10 +63,10 @@ class LoginActivity : AppCompatActivity() {
                 var intent: Intent? = null
 
                 // Ir para a tela de pagamento por padrão, caso usuário logado não tenha plano
-                intent = Intent(applicationContext, PaymentActivity::class.java)
+                intent = Intent(applicationContext, PlansActivity::class.java)
 
                 // Verificar se tem algum plano ativo
-                // intent = Intent(applicationContext, PaymentActivity::class.java)
+                // intent = Intent(applicationContext, PlansActivity::class.java)
 
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)

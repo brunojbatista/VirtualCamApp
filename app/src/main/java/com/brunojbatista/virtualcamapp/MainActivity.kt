@@ -41,10 +41,10 @@ class MainActivity : AppCompatActivity() {
 
 
             // Ir para a tela de pagamento por padrão, caso usuário logado não tenha plano
-            intent = Intent(applicationContext, PaymentActivity::class.java)
+            intent = Intent(applicationContext, PlansActivity::class.java)
 
             // Verificar se tem algum plano ativo
-            // intent = Intent(applicationContext, PaymentActivity::class.java)
+            // intent = Intent(applicationContext, PlansActivity::class.java)
         } else {
             // Caso usuário deslogado, mande para a tela de login
             intent = Intent(applicationContext, LoginActivity::class.java)

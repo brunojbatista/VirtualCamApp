@@ -19,7 +19,7 @@
             android:parentActivityName=".LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".PaymentActivity"
+            android:name=".PlansActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

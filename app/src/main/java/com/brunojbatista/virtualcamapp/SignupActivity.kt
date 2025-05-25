@@ -72,14 +72,13 @@ class SignupActivity : AppCompatActivity() {
                             .set(user)
                             .addOnSuccessListener {
                                 showMessage("Cadastro feito com sucesso.")
-                                val intent = Intent(applicationContext, PaymentActivity::class.java)
+                                val intent = Intent(applicationContext, PlansActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(intent)
                             }
                             .addOnFailureListener { error ->
                                 error.printStackTrace()
-                                showMessage("Erro ao criar autenticação: ${error.message}")
-                                //showMessage("Erro ao cadastrar, reporte a equipe de suporte.")
+                                showMessage("Erro ao cadastrar, reporte a equipe de suporte.")
                             }
                     }
                 }
