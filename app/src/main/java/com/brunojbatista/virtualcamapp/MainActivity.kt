@@ -5,16 +5,24 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import com.brunojbatista.virtualcamapp.model.Users
+import com.brunojbatista.virtualcamapp.utils.navigateTo
+import com.brunojbatista.virtualcamapp.utils.showMessage
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
     private val firebaseAuth by lazy {
         FirebaseAuth.getInstance()
+    }
+
+    private val firestore by lazy {
+        FirebaseFirestore.getInstance()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,31 +34,52 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        firebaseAuth.signOut()
     }
 
     override fun onStart() {
         super.onStart()
 
-        var intent: Intent? = null
         if (firebaseAuth.currentUser != null) {
             // Fazer uma verificação se tem algum plano já existente
             // para mandar para a tela principal do app
             // caso não tenha manda para a tela de pagamentos
 
-
-            // Ir para a tela de pagamento por padrão, caso usuário logado não tenha plano
-            intent = Intent(applicationContext, PlansActivity::class.java)
-
             // Verificar se tem algum plano ativo
-            // intent = Intent(applicationContext, PlansActivity::class.java)
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+            if (userId != null) {
+                FirebaseFirestore.getInstance()
+                    .collection("Users")
+                    .document(userId)
+                    .get()
+                    .addOnSuccessListener { document ->
+                        if (document.exists()) {
+                            val user = document.toObject(Users::class.java)
+                            if (user?.planId != null) {
+                                navigateTo<AppActivity>(clearBackStack = true)
+                            } else {
+                                navigateTo<PlansActivity>(clearBackStack = true)
+                            }
+                        } else {
+                            // Documento não encontrado
+                            showMessage("Usuário não encontrado no sistema.")
+                            firebaseAuth.signOut()
+                            navigateTo<LoginActivity>(clearBackStack = true)
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        // Tratar erro
+                        exception.printStackTrace()
+                        showMessage("Ocorreu um leitura do usuário.")
+                        firebaseAuth.signOut()
+                        navigateTo<LoginActivity>(clearBackStack = true)
+                    }
+            } else {
+                firebaseAuth.signOut()
+                navigateTo<LoginActivity>(clearBackStack = true)
+            }
         } else {
             // Caso usuário deslogado, mande para a tela de login
-            intent = Intent(applicationContext, LoginActivity::class.java)
+            navigateTo<LoginActivity>(clearBackStack = true)
         }
-
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
     }
 }

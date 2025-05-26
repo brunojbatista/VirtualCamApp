@@ -10,12 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.brunojbatista.virtualcamapp.databinding.ActivityLoginBinding
 import com.brunojbatista.virtualcamapp.databinding.ActivitySignupBinding
 import com.brunojbatista.virtualcamapp.model.Users
+import com.brunojbatista.virtualcamapp.utils.navigateTo
 import com.brunojbatista.virtualcamapp.utils.showMessage
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
 
@@ -60,24 +62,46 @@ class LoginActivity : AppCompatActivity() {
                 // Fazer uma verificação se tem algum plano já existente
                 // para mandar para a tela principal do app
                 // caso não tenha manda para a tela de pagamentos
-                var intent: Intent? = null
-
-                // Ir para a tela de pagamento por padrão, caso usuário logado não tenha plano
-                intent = Intent(applicationContext, PlansActivity::class.java)
 
                 // Verificar se tem algum plano ativo
-                // intent = Intent(applicationContext, PlansActivity::class.java)
-
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                if (userId != null) {
+                    FirebaseFirestore.getInstance()
+                        .collection("Users")
+                        .document(userId)
+                        .get()
+                        .addOnSuccessListener { document ->
+                            if (document.exists()) {
+                                val user = document.toObject(Users::class.java)
+                                if (user?.planId != null) {
+                                    navigateTo<AppActivity>(clearBackStack = true)
+                                } else {
+                                    navigateTo<PlansActivity>(clearBackStack = true)
+                                }
+                            } else {
+                                // Documento não encontrado
+                                showMessage("Usuário não encontrado no sistema.")
+                                firebaseAuth.signOut()
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            // Tratar erro
+                            exception.printStackTrace()
+                            showMessage("Ocorreu um leitura do usuário.")
+                            firebaseAuth.signOut()
+                        }
+                } else {
+                    showMessage("Usuário não encontrado no sistema.")
+                    firebaseAuth.signOut()
+                }
             }
             .addOnFailureListener { error ->
                 try {
                     throw error
                 } catch (e: FirebaseAuthInvalidUserException) {
-                    showMessage("Email ou inválido.")
+                    showMessage("Email ou senha inválido.")
                 } catch (e: FirebaseAuthInvalidCredentialsException) {
-                    showMessage("Email ou inválido.")
+                    showMessage("Email ou senha inválido.")
                 }
             }
     }

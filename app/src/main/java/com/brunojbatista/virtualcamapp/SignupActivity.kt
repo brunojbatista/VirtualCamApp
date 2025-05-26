@@ -152,7 +152,7 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun initializeToolbar() {
-        var toolbar = binding.includeToolbar.tbVersion1
+        val toolbar = binding.includeToolbar.tbVersion1
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             title = "Faça seu cadastro"

@@ -3,9 +3,9 @@ package com.brunojbatista.virtualcamapp.model
 import java.util.Date
 
 data class Users(
-    var id: String,
-    var name: String,
-    var email: String,
+    var id: String? = null,
+    var name: String? = null,
+    var email: String? = null,
     var profilePhotoPath: String? = null,
     var planId: String? = null,
 

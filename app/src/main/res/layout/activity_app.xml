@@ -5,10 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlansActivity">
+    tools:context=".AppActivity">
 
     <include
-        android:id="@+id/includePlansToolbar"
+        android:id="@+id/includeAppToolbar"
         layout="@layout/toolbar_version_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Tela de Planos"
+        android:text="Tela Principal"
         android:textColor="@color/onPrimary"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
