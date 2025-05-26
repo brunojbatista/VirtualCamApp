@@ -8,20 +8,18 @@ import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
-import com.brunojbatista.virtualcamapp.databinding.ActivityLoginBinding
-import com.brunojbatista.virtualcamapp.databinding.ActivityPlansBinding
+import com.brunojbatista.virtualcamapp.databinding.ActivityAppBinding
 import com.brunojbatista.virtualcamapp.utils.applyDefaultStyle
 import com.brunojbatista.virtualcamapp.utils.initializeToolbarUtil
 import com.brunojbatista.virtualcamapp.utils.navigateTo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class PlansActivity : AppCompatActivity() {
+class AppActivity : AppCompatActivity() {
 
     private val binding by lazy {
-        ActivityPlansBinding.inflate( layoutInflater )
+        ActivityAppBinding.inflate( layoutInflater )
     }
 
     private val firebaseAuth by lazy {
@@ -36,12 +34,12 @@ class PlansActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
-        // initializeToolbar()
-        initializeToolbarUtil(binding.includePlansToolbar, firebaseAuth)
+        //initializeToolbar()
+        initializeToolbarUtil(binding.includeAppToolbar, firebaseAuth)
     }
 
     /*private fun initializeToolbar() {
-        val toolbar = binding.includePlansToolbar.tbVersion1
+        val toolbar = binding.includeAppToolbar.tbVersion1
         toolbar.applyDefaultStyle(this)
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
