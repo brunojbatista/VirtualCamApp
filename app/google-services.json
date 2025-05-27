@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "115269760874",
+    "project_id": "virtualcamapp",
+    "storage_bucket": "virtualcamapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:115269760874:android:75ed503deafc037b2f9713",
+        "android_client_info": {
+          "package_name": "com.brunojbatista.virtualcamapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKNAKjrsXLdyUi3RIu77Q7jlde6LLMJV0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
