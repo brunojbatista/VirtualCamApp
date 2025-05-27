@@ -8,6 +8,9 @@ import android.view.MenuItem
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.brunojbatista.virtualcamapp.LoginActivity
 import com.brunojbatista.virtualcamapp.ProfileActivity
 import com.brunojbatista.virtualcamapp.R
@@ -19,6 +22,12 @@ fun AppCompatActivity.initializeToolbarUtil(
     firebaseAuth: FirebaseAuth
 ) {
     val toolbar = binding.tbVersion1
+    // Adiciona padding para não sobrepor status bar
+    ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, insets ->
+        val topInset = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+        view.updatePadding(top = topInset)
+        insets
+    }
     toolbar.applyDefaultStyle(this)
     setSupportActionBar(toolbar)
     supportActionBar?.title = "VirtualCamApp"

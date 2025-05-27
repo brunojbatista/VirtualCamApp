@@ -20,9 +20,11 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="379dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -63,9 +65,11 @@
 
     <LinearLayout
         android:id="@+id/linearLayout3"
-        android:layout_width="379dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -105,9 +109,11 @@
 
     <LinearLayout
         android:id="@+id/linearLayout4"
-        android:layout_width="379dp"
+        android:layout_width="0dp"
         android:layout_height="65dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -163,9 +169,11 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonSignup"
-        android:layout_width="379dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/button_primary_background"
         android:backgroundTint="@null"
         android:text="Cadastrar"
@@ -179,9 +187,11 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="379dp"
+        android:layout_width="0dp"
         android:layout_height="65dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

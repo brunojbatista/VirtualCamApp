@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.util.Patterns
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.brunojbatista.virtualcamapp.databinding.ActivitySignupBinding
 import com.brunojbatista.virtualcamapp.model.Users
+import com.brunojbatista.virtualcamapp.utils.initializeToolbarUtil
 import com.brunojbatista.virtualcamapp.utils.showMessage
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
@@ -45,8 +47,7 @@ class SignupActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }*/
-
-        initializeToolbar()
+        initializeToolbarUtil(binding.includeToolbar, firebaseAuth)
         initializeEvents()
     }
 
@@ -160,14 +161,5 @@ class SignupActivity : AppCompatActivity() {
             return false
         }
         return rulePassword(binding.inputConfirmPassword)
-    }
-
-    private fun initializeToolbar() {
-        val toolbar = binding.includeToolbar.tbVersion1
-        setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            title = "Faça seu cadastro"
-            setDisplayHomeAsUpEnabled(true)
-        }
     }
 }
