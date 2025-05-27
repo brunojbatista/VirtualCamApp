@@ -12,7 +12,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 
 class SignupActivity : AppCompatActivity() {
@@ -72,6 +74,15 @@ class SignupActivity : AppCompatActivity() {
                             .set(user)
                             .addOnSuccessListener {
                                 showMessage("Cadastro feito com sucesso.")
+                                firestore
+                                    .collection("Users")
+                                    .document(userId)
+                                    .update(
+                                        mapOf(
+                                            "loginAt" to FieldValue.serverTimestamp(),
+                                            "createdAt" to FieldValue.serverTimestamp()
+                                        )
+                                    )
                                 val intent = Intent(applicationContext, PlansActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(intent)

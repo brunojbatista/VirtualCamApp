@@ -13,6 +13,7 @@ import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
@@ -47,7 +48,12 @@ class MainActivity : AppCompatActivity() {
             // Verificar se tem algum plano ativo
             val userId = FirebaseAuth.getInstance().currentUser?.uid
             if (userId != null) {
-                FirebaseFirestore.getInstance()
+                firestore
+                    .collection("Users")
+                    .document(userId)
+                    .update("loginAt", FieldValue.serverTimestamp())
+
+                firestore
                     .collection("Users")
                     .document(userId)
                     .get()
@@ -56,6 +62,8 @@ class MainActivity : AppCompatActivity() {
                             val user = document.toObject(Users::class.java)
                             if (user?.planId != null) {
                                 navigateTo<AppActivity>(clearBackStack = true)
+                            } else if (user?.requestPlanId != null) {
+                                navigateTo<PurchasedPlanActivity>(clearBackStack = true)
                             } else {
                                 navigateTo<PlansActivity>(clearBackStack = true)
                             }

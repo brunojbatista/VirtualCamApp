@@ -17,7 +17,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 class LoginActivity : AppCompatActivity() {
 
@@ -27,6 +29,10 @@ class LoginActivity : AppCompatActivity() {
 
     private val firebaseAuth by lazy {
         FirebaseAuth.getInstance()
+    }
+
+    private val firestore by lazy {
+        FirebaseFirestore.getInstance()
     }
 
     private lateinit var email: String
@@ -66,7 +72,12 @@ class LoginActivity : AppCompatActivity() {
                 // Verificar se tem algum plano ativo
                 val userId = FirebaseAuth.getInstance().currentUser?.uid
                 if (userId != null) {
-                    FirebaseFirestore.getInstance()
+                    firestore
+                        .collection("Users")
+                        .document(userId)
+                        .update("loginAt", FieldValue.serverTimestamp())
+
+                    firestore
                         .collection("Users")
                         .document(userId)
                         .get()
@@ -75,6 +86,8 @@ class LoginActivity : AppCompatActivity() {
                                 val user = document.toObject(Users::class.java)
                                 if (user?.planId != null) {
                                     navigateTo<AppActivity>(clearBackStack = true)
+                                } else if (user?.requestPlanId != null) {
+                                    navigateTo<PurchasedPlanActivity>(clearBackStack = true)
                                 } else {
                                     navigateTo<PlansActivity>(clearBackStack = true)
                                 }

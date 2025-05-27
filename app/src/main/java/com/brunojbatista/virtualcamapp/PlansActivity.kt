@@ -17,6 +17,11 @@ import com.brunojbatista.virtualcamapp.utils.initializeToolbarUtil
 import com.brunojbatista.virtualcamapp.utils.navigateTo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.content.res.ColorStateList
+import com.brunojbatista.virtualcamapp.model.UsersPlans
+import com.brunojbatista.virtualcamapp.utils.showMessage
+import com.google.firebase.firestore.FieldValue
+import java.util.Date
 
 class PlansActivity : AppCompatActivity() {
 
@@ -32,54 +37,84 @@ class PlansActivity : AppCompatActivity() {
         FirebaseFirestore.getInstance()
     }
 
+    private var days: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
         // initializeToolbar()
         initializeToolbarUtil(binding.includePlansToolbar, firebaseAuth)
+        initializeSlider()
+        initializeEvents()
     }
 
-    /*private fun initializeToolbar() {
-        val toolbar = binding.includePlansToolbar.tbVersion1
-        toolbar.applyDefaultStyle(this)
-        setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            title = "VirtualCamApp"
+    private fun initializeEvents() {
+        // Processo de comprar o plano
+        binding.buttonBuyPlan.setOnClickListener {
+            buyPlan()
         }
-        addMenuProvider(
-            object: MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.main_menu, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    when (menuItem.itemId) {
-                        R.id.menuProfile -> {
-                            startActivity(
-                                Intent(applicationContext, ProfileActivity::class.java)
-                            )
-                        }
-                        R.id.menuLogout -> {
-                            signOutUser()
-                        }
-                    }
-                    return true
-                }
-            }
-        )
     }
 
-    private fun signOutUser() {
-        AlertDialog.Builder(this)
-            .setTitle("Sair")
-            .setMessage("Deseja realmente sair?")
-            .setNegativeButton("Não") { dialog, position -> }
-            .setPositiveButton("Sim") { dialog, position ->
-                firebaseAuth.signOut()
-                navigateTo<LoginActivity>(clearBackStack = true)
-            }
-            .create()
-            .show()
-    }*/
+    private fun buyPlan() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val userPlan = UsersPlans(null, userId, days)
+            firestore
+                .collection("Users")
+                .document(userId)
+                .collection("UsersPlans")
+                .add(userPlan)
+                .addOnSuccessListener { documentRef ->
+                    firestore
+                        .collection("Users")
+                        .document(userId)
+                        .collection("UsersPlans")
+                        .document(documentRef.id)
+                        .update(
+                            mapOf(
+                                "id" to documentRef.id,
+                                "createdAt" to FieldValue.serverTimestamp(),
+                            )
+                        )
+                    firestore
+                        .collection("Users")
+                        .document(userId)
+                        .update(
+                            mapOf(
+                                "requestPlanId" to documentRef.id,
+                                "updatedAt" to FieldValue.serverTimestamp(),
+                            )
+                        )
+                    showMessage("Plano solicitado com sucesso")
+                    navigateTo<PurchasedPlanActivity>(clearBackStack = true)
+                }
+                .addOnFailureListener { e ->
+                    e.printStackTrace()
+                    showMessage("Ocorreu um erro na solicitação do plano")
+                }
+        }
+    }
+
+    private fun initializeSlider() {
+        val sliderDays = binding.sliderDays
+        val textDaysSelected = binding.textDaysSelected
+
+        val blue = ContextCompat.getColor(this, R.color.blue_app)
+
+        sliderDays.trackActiveTintList = ColorStateList.valueOf(blue)
+        sliderDays.thumbTintList = ColorStateList.valueOf(blue)
+
+        sliderDays.setLabelFormatter { value ->
+            val intVal = value.toInt()
+            if (intVal == 1) "1 dia" else "$intVal dias"
+        }
+
+        sliderDays.addOnChangeListener { _, value, _ ->
+            days = value.toInt()
+            textDaysSelected.text = "Você selecionou: $days dia(s)"
+        }
+    }
+
+
 }
