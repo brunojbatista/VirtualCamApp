@@ -37,7 +37,7 @@
         android:clickable="true"
         android:focusable="true"
         android:text="Clique aqui para cadastrar"
-        android:textColor="@color/secondary"
+        android:textColor="@color/blue_app"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,13 +61,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.85" />
+        app:layout_constraintGuide_begin="513dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="266dp"
+        android:layout_width="0dp"
         android:layout_height="65dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,9 +90,9 @@
             app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtEmail"
+                android:id="@+id/inputEmail"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:background="@drawable/button_input_background"
                 android:hint="Digite seu email"
                 android:padding="12dp"
@@ -101,9 +103,11 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="266dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -127,9 +131,9 @@
             app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtPassword"
+                android:id="@+id/inputPassword"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="48dp"
                 android:background="@drawable/button_input_background"
                 android:hint="Digite sua senha"
                 android:inputType="textPassword"
@@ -141,10 +145,12 @@
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnEntrar"
-        android:layout_width="266dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="24dp"
+        android:id="@+id/buttonLogin"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/button_primary_background"
         android:backgroundTint="@null"
         android:text="Entrar"
@@ -154,36 +160,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
-
-    <LinearLayout
-        android:id="@+id/btnGoogle"
-        android:layout_width="266dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/button_secondary_background"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnEntrar">
-
-        <ImageView
-            android:id="@+id/googleIcon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_google_compact" />
-
-        <TextView
-            android:id="@+id/googleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Google"
-            android:textColor="#FFF"
-            android:textSize="12sp" />
-    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
