@@ -30,7 +30,7 @@ class AuthCheckActivity : AppCompatActivity() {
         FirebaseAppCheck.getInstance().installAppCheckProviderFactory(factory)
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_auth_check)
     }
 
     override fun onStart() {

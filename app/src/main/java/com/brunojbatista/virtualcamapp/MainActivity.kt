@@ -3,7 +3,7 @@ package com.brunojbatista.virtualcamapp
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.brunojbatista.virtualcamapp.databinding.ActivityAppBinding
+import com.brunojbatista.virtualcamapp.databinding.ActivityMainBinding
 import com.brunojbatista.virtualcamapp.utils.initializeToolbarUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -11,7 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy {
-        ActivityAppBinding.inflate( layoutInflater )
+        ActivityMainBinding.inflate( layoutInflater )
     }
 
     private val firebaseAuth by lazy {
