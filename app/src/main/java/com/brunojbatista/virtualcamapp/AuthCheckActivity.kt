@@ -8,6 +8,7 @@ import com.brunojbatista.virtualcamapp.utils.showMessage
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -23,13 +24,14 @@ class AuthCheckActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         //Inicialização do App Check do Firebase
         FirebaseApp.initializeApp(this)
-        //val factory = PlayIntegrityAppCheckProviderFactory.getInstance()
-        val factory = DebugAppCheckProviderFactory.getInstance()
-        FirebaseAppCheck.getInstance().installAppCheckProviderFactory(factory)
+        val providerFactory = PlayIntegrityAppCheckProviderFactory.getInstance()
+        val appCheck = FirebaseAppCheck.getInstance()
+        appCheck.installAppCheckProviderFactory(providerFactory)
 
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth_check)
     }
 
