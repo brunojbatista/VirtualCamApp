@@ -18,7 +18,7 @@
             android:name=".PurchasedPlanActivity"
             android:exported="false" />
         <activity
-            android:name=".AppActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".ProfileActivity"
@@ -31,7 +31,7 @@
             android:name=".PlansActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".AuthCheckActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

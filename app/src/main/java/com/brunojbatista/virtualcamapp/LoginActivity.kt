@@ -1,14 +1,9 @@
 package com.brunojbatista.virtualcamapp
 
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Patterns
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.brunojbatista.virtualcamapp.databinding.ActivityLoginBinding
-import com.brunojbatista.virtualcamapp.databinding.ActivitySignupBinding
 import com.brunojbatista.virtualcamapp.model.Users
 import com.brunojbatista.virtualcamapp.utils.navigateTo
 import com.brunojbatista.virtualcamapp.utils.showMessage
@@ -16,10 +11,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.Date
 
 class LoginActivity : AppCompatActivity() {
 
@@ -83,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
                             if (document.exists()) {
                                 val user = document.toObject(Users::class.java)
                                 if (user?.planId != null) {
-                                    navigateTo<AppActivity>(clearBackStack = true)
+                                    navigateTo<MainActivity>(clearBackStack = true)
                                 } else if (user?.requestPlanId != null) {
                                     navigateTo<PurchasedPlanActivity>(clearBackStack = true)
                                 } else {
