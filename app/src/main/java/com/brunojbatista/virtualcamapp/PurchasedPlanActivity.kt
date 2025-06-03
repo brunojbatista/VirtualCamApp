@@ -3,9 +3,6 @@ package com.brunojbatista.virtualcamapp
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.brunojbatista.virtualcamapp.databinding.ActivityPlansBinding
 import com.brunojbatista.virtualcamapp.databinding.ActivityPurchasedPlanBinding
 import com.brunojbatista.virtualcamapp.model.Users
 import com.brunojbatista.virtualcamapp.model.UsersPlans
@@ -13,7 +10,6 @@ import com.brunojbatista.virtualcamapp.utils.initializeToolbarUtil
 import com.brunojbatista.virtualcamapp.utils.navigateTo
 import com.brunojbatista.virtualcamapp.utils.showMessage
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import android.content.Intent
 import android.content.ActivityNotFoundException
@@ -77,7 +73,7 @@ class PurchasedPlanActivity : AppCompatActivity() {
                     when {
                         user?.planId != null -> {
                             // Usuário já tem plano ativo
-                            navigateTo<AppActivity>(clearBackStack = true)
+                            navigateTo<MainActivity>(clearBackStack = true)
                         }
                         user?.requestPlanId == null -> {
                             // Usuário ainda não solicitou nenhum plano
