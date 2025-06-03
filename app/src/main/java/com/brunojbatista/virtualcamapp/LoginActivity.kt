@@ -48,9 +48,7 @@ class LoginActivity : AppCompatActivity() {
 
         // Evento do botão de cadastrar
         binding.signInHere.setOnClickListener {
-            startActivity(
-                Intent(this, SignupActivity::class.java)
-            )
+            navigateTo<SignupActivity>(clearBackStack = false)
         }
 
         binding.buttonLogin.setOnClickListener {
