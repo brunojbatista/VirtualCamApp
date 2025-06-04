@@ -2,6 +2,7 @@ package com.brunojbatista.virtualcamapp.utils
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -11,6 +12,7 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import com.brunojbatista.virtualcamapp.AdminActivity
 import com.brunojbatista.virtualcamapp.LoginActivity
 import com.brunojbatista.virtualcamapp.ProfileActivity
 import com.brunojbatista.virtualcamapp.R
@@ -35,14 +37,32 @@ fun AppCompatActivity.initializeToolbarUtil(
     addMenuProvider(object : MenuProvider {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
             menuInflater.inflate(R.menu.main_menu, menu)
+            // Verifica se o usuário é admin para mostrar a opção "Administração"
+            checkUserPermissionAdmin(
+                onResult = { isAdmin ->
+                    val adminItem = menu.findItem(R.id.menuAdmin)
+                    if (isAdmin) {
+                        adminItem?.isVisible = true
+                        adminItem?.isEnabled = this@initializeToolbarUtil !is AdminActivity
+                    } else {
+                        adminItem?.isVisible = false
+                    }
+                },
+                onError = {
+                    Log.e("ToolbarMenu", "Erro ao verificar admin", it)
+                }
+            )
         }
 
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
             when (menuItem.itemId) {
                 R.id.menuProfile -> {
-                    startActivity(Intent(applicationContext, ProfileActivity::class.java))
+                    navigateTo<ProfileActivity>()
                 }
-
+                R.id.menuAdmin -> {
+                    navigateTo<AdminActivity>()
+                    return true
+                }
                 R.id.menuLogout -> {
                     signOutUserUtil(this@initializeToolbarUtil, firebaseAuth)
                 }

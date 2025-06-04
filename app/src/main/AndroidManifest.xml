@@ -15,6 +15,9 @@
         android:theme="@style/Theme.VirtualCamApp"
         tools:targetApi="31">
         <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
+        <activity
             android:name=".PurchasedPlanActivity"
             android:exported="false" />
         <activity
