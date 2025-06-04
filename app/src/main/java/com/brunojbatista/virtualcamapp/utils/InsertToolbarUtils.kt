@@ -37,6 +37,9 @@ fun AppCompatActivity.initializeToolbarUtil(
     addMenuProvider(object : MenuProvider {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
             menuInflater.inflate(R.menu.main_menu, menu)
+            // Perfil: desabilita se já estiver na tela de perfil
+            val profileItem = menu.findItem(R.id.menuProfile)
+            profileItem?.isEnabled = this@initializeToolbarUtil !is ProfileActivity
             // Verifica se o usuário é admin para mostrar a opção "Administração"
             checkUserPermissionAdmin(
                 onResult = { isAdmin ->
