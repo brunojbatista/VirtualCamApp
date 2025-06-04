@@ -1,10 +1,13 @@
 package com.brunojbatista.virtualcamapp
 
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import androidx.appcompat.app.AppCompatActivity
 import com.brunojbatista.virtualcamapp.databinding.ActivityLoginBinding
 import com.brunojbatista.virtualcamapp.model.Users
+import com.brunojbatista.virtualcamapp.utils.checkUserLogged
+import com.brunojbatista.virtualcamapp.utils.checkUserPermissionAdmin
 import com.brunojbatista.virtualcamapp.utils.navigateTo
 import com.brunojbatista.virtualcamapp.utils.showMessage
 import com.google.android.material.textfield.TextInputEditText
@@ -60,44 +63,55 @@ class LoginActivity : AppCompatActivity() {
                 // para mandar para a tela principal do app
                 // caso não tenha manda para a tela de pagamentos
 
-                // Verificar se tem algum plano ativo
-                val userId = FirebaseAuth.getInstance().currentUser?.uid
-                if (userId != null) {
-                    firestore
-                        .collection("Users")
-                        .document(userId)
-                        .update("loginAt", FieldValue.serverTimestamp())
+                checkUserLogged(
+                    onLogged = { uid ->
+                        firestore
+                            .collection("Users")
+                            .document(uid)
+                            .update("loginAt", FieldValue.serverTimestamp())
 
-                    firestore
-                        .collection("Users")
-                        .document(userId)
-                        .get()
-                        .addOnSuccessListener { document ->
-                            if (document.exists()) {
-                                val user = document.toObject(Users::class.java)
-                                if (user?.planId != null) {
+                        checkUserPermissionAdmin(
+                            onResult = { isAdmin ->
+                                if (isAdmin) {
                                     navigateTo<MainActivity>(clearBackStack = true)
-                                } else if (user?.requestPlanId != null) {
-                                    navigateTo<PurchasedPlanActivity>(clearBackStack = true)
                                 } else {
-                                    navigateTo<PlansActivity>(clearBackStack = true)
+                                    firestore
+                                        .collection("Users")
+                                        .document(uid)
+                                        .get()
+                                        .addOnSuccessListener { document ->
+                                            if (document.exists()) {
+                                                val user = document.toObject(Users::class.java)
+                                                when {
+                                                    user?.planId != null -> navigateTo<MainActivity>(clearBackStack = true)
+                                                    user?.requestPlanId != null -> navigateTo<PurchasedPlanActivity>(clearBackStack = true)
+                                                    else -> navigateTo<PlansActivity>(clearBackStack = true)
+                                                }
+                                            } else {
+                                                // Documento não encontrado
+                                                showMessage("Usuário não encontrado no sistema.")
+                                                firebaseAuth.signOut()
+                                            }
+                                        }
+                                        .addOnFailureListener { exception ->
+                                            // Tratar erro
+                                            exception.printStackTrace()
+                                            showMessage("Ocorreu um leitura do usuário.")
+                                            firebaseAuth.signOut()
+                                        }
                                 }
-                            } else {
-                                // Documento não encontrado
-                                showMessage("Usuário não encontrado no sistema.")
-                                // firebaseAuth.signOut()
+                            },
+                            onError = { error ->
+                                Log.e("AuthCheck", "Erro ao verificar claim admin", error)
+                                showMessage("Erro ao verificar permissões")
                             }
-                        }
-                        .addOnFailureListener { exception ->
-                            // Tratar erro
-                            exception.printStackTrace()
-                            showMessage("Ocorreu um leitura do usuário.")
-                            // firebaseAuth.signOut()
-                        }
-                } else {
-                    showMessage("Usuário não encontrado no sistema.")
-                    // firebaseAuth.signOut()
-                }
+                        )
+                    },
+                    onNotLoggedIn = {
+                        navigateTo<LoginActivity>(clearBackStack = true)
+                        showMessage("Usuário não encontrado no sistema.")
+                    }
+                )
             }
             .addOnFailureListener { error ->
                 try {
