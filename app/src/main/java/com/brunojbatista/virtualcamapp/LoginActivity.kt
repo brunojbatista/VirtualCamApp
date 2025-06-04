@@ -85,18 +85,18 @@ class LoginActivity : AppCompatActivity() {
                             } else {
                                 // Documento não encontrado
                                 showMessage("Usuário não encontrado no sistema.")
-                                firebaseAuth.signOut()
+                                // firebaseAuth.signOut()
                             }
                         }
                         .addOnFailureListener { exception ->
                             // Tratar erro
                             exception.printStackTrace()
                             showMessage("Ocorreu um leitura do usuário.")
-                            firebaseAuth.signOut()
+                            // firebaseAuth.signOut()
                         }
                 } else {
                     showMessage("Usuário não encontrado no sistema.")
-                    firebaseAuth.signOut()
+                    // firebaseAuth.signOut()
                 }
             }
             .addOnFailureListener { error ->
