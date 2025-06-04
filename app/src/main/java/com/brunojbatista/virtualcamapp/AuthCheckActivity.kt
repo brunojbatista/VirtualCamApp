@@ -7,6 +7,8 @@ import com.brunojbatista.virtualcamapp.model.Users
 import com.brunojbatista.virtualcamapp.utils.navigateTo
 import com.brunojbatista.virtualcamapp.utils.showMessage
 import com.brunojbatista.virtualcamapp.BuildConfig
+import com.brunojbatista.virtualcamapp.utils.checkUserPermissionAdmin
+import com.brunojbatista.virtualcamapp.utils.checkUserLogged
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
@@ -58,41 +60,50 @@ class AuthCheckActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        if (firebaseAuth.currentUser != null) {
-            val userId = firebaseAuth.currentUser?.uid
-            if (userId != null) {
-                firestore
-                    .collection("Users")
-                    .document(userId)
-                    .update("loginAt", FieldValue.serverTimestamp())
-
-                firestore
-                    .collection("Users")
-                    .document(userId)
-                    .get()
-                    .addOnSuccessListener { document ->
-                        if (document.exists()) {
-                            val user = document.toObject(Users::class.java)
-                            when {
-                                user?.planId != null -> navigateTo<MainActivity>(clearBackStack = true)
-                                user?.requestPlanId != null -> navigateTo<PurchasedPlanActivity>(clearBackStack = true)
-                                else -> navigateTo<PlansActivity>(clearBackStack = true)
-                            }
+        checkUserLogged(
+            onLogged = { uid ->
+                checkUserPermissionAdmin(
+                    onResult = { isAdmin ->
+                        if (isAdmin) {
+                            navigateTo<MainActivity>(clearBackStack = true)
                         } else {
-                            showMessage("Usuário não encontrado no sistema.")
-                            firebaseAuth.signOut()
-                            navigateTo<LoginActivity>(clearBackStack = true)
+                            firestore
+                                .collection("Users")
+                                .document(uid)
+                                .get()
+                                .addOnSuccessListener { document ->
+                                    if (document.exists()) {
+                                        val user = document.toObject(Users::class.java)
+                                        when {
+                                            user?.planId != null -> navigateTo<MainActivity>(clearBackStack = true)
+                                            user?.requestPlanId != null -> navigateTo<PurchasedPlanActivity>(clearBackStack = true)
+                                            else -> navigateTo<PlansActivity>(clearBackStack = true)
+                                        }
+                                    } else {
+                                        showMessage("Usuário não encontrado no sistema.")
+                                        firebaseAuth.signOut()
+                                        navigateTo<LoginActivity>(clearBackStack = true)
+                                    }
+                                }
+                                .addOnFailureListener { exception ->
+                                    exception.printStackTrace()
+                                    showMessage("Erro ao ler dados do usuário.")
+                                    firebaseAuth.signOut()
+                                    navigateTo<LoginActivity>(clearBackStack = true)
+                                }
                         }
+                    },
+                    onError = { error ->
+                        Log.e("AuthCheck", "Erro ao verificar claim admin", error)
+                        showMessage("Erro ao verificar permissões")
                     }
-                    .addOnFailureListener { exception ->
-                        exception.printStackTrace()
-                        showMessage("Erro ao ler dados do usuário.")
-                        firebaseAuth.signOut()
-                        navigateTo<LoginActivity>(clearBackStack = true)
-                    }
+                )
+            },
+            onNotLoggedIn = {
+                navigateTo<LoginActivity>(clearBackStack = true)
             }
-        } else {
-            navigateTo<LoginActivity>(clearBackStack = true)
-        }
+        )
     }
+
+
 }

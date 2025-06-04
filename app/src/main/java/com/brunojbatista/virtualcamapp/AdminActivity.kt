@@ -3,18 +3,15 @@ package com.brunojbatista.virtualcamapp
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.brunojbatista.virtualcamapp.databinding.ActivityAdminBinding
-import com.brunojbatista.virtualcamapp.databinding.ActivityProfileBinding
 import com.brunojbatista.virtualcamapp.utils.initializeToolbarUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ProfileActivity : AppCompatActivity() {
+class AdminActivity : AppCompatActivity() {
 
     private val binding by lazy {
-        ActivityProfileBinding.inflate( layoutInflater )
+        ActivityAdminBinding.inflate( layoutInflater )
     }
 
     private val firebaseAuth by lazy {
@@ -29,6 +26,6 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView( binding.root )
-        initializeToolbarUtil(binding.includeProfileToolbar, firebaseAuth)
+        initializeToolbarUtil(binding.includeAdminToolbar, firebaseAuth)
     }
 }

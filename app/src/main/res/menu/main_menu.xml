@@ -7,6 +7,11 @@
         android:title="Perfil" />
 
     <item
+        android:id="@+id/menuAdmin"
+        android:title="Administração"
+        android:visible="false" />
+
+    <item
         android:id="@+id/menuLogout"
         android:title="Sair" />
 
