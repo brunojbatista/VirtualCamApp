@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.brunojbatista.virtualcamapp.AdminActivity
 import com.brunojbatista.virtualcamapp.LoginActivity
+import com.brunojbatista.virtualcamapp.MainActivity
 import com.brunojbatista.virtualcamapp.ProfileActivity
 import com.brunojbatista.virtualcamapp.R
 import com.brunojbatista.virtualcamapp.databinding.ToolbarVersion1Binding
@@ -33,6 +34,15 @@ fun AppCompatActivity.initializeToolbarUtil(
     toolbar.applyDefaultStyle(this)
     setSupportActionBar(toolbar)
     supportActionBar?.title = "VirtualCamApp"
+
+    // Adicionar o botão de voltar no toolbar
+    val mustShowBackButton = this !is MainActivity
+    supportActionBar?.setDisplayHomeAsUpEnabled(mustShowBackButton)
+    if (mustShowBackButton) {
+        toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+    }
 
     addMenuProvider(object : MenuProvider {
         override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
