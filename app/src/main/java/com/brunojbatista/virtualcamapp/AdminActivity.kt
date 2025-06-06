@@ -12,7 +12,7 @@ import com.brunojbatista.virtualcamapp.utils.initializeToolbarUtil
 import com.brunojbatista.virtualcamapp.utils.showSnackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.io.File
+import android.view.View
 
 class AdminActivity : AppCompatActivity() {
 
@@ -74,10 +74,10 @@ class AdminActivity : AppCompatActivity() {
 
         Log.d("AdminActivity", "O usuário selecionado foi: ${user.name}")
 
-        val firestore = FirebaseFirestore.getInstance()
-
         val userRef = firestore.collection("Users").document(userId)
         val userPlanRef = userRef.collection("UsersPlans").document(planId)
+
+        showLoading()
 
         // Etapa 1: Atualiza startAt no plano solicitado
         userPlanRef.update("startAt", com.google.firebase.firestore.FieldValue.serverTimestamp())
@@ -89,37 +89,64 @@ class AdminActivity : AppCompatActivity() {
                         "requestPlanId" to null
                     )
                 ).addOnSuccessListener {
+                    hideLoading()
                     showSnackbar(
                         message = "Plano ativado para ${user.name}",
                         actionText = "DESFAZER"
                     ) {
-                        //desfazerAtivacao(userId, planId)
+                        deactivateUserPlan(userId, planId, user.name)
                         Log.d("AdminActivity", "Desfazendo o plano para o usuário selecionado: ${user.name}")
                     }
+                    loadPendingUsers()
                 }.addOnFailureListener { e ->
+                    hideLoading()
                     showSnackbar("Erro ao atualizar usuário: ${e.message}")
                 }
             }
             .addOnFailureListener { e ->
+                hideLoading()
                 showSnackbar("Erro ao ativar plano: ${e.message}")
             }
-
-        /*val userRef = firestore.collection("Users").document(user.id!!)
-
-        userRef.update("planId", user.requestPlanId)
-            .addOnSuccessListener {
-                showSnackbar(
-                    message = "Plano ativado para ${user.name ?: "Sem Nome"}",
-                    actionText = "DESFAZER"
-                ) {
-                    // Undo → remove o plano e reinjeta o item na lista
-                    userRef.update("planId", null).addOnSuccessListener {
-                        val novaLista = adapter.currentList.toMutableList()
-                        novaLista.add(0, user)
-                        adapter.submitList(novaLista)
-                        binding.recyclerView.scrollToPosition(0)
-                    }
-                }
-            }*/
     }
+
+    private fun deactivateUserPlan(userId: String, planId: String, userName: String?) {
+        val userRef = firestore.collection("Users").document(userId)
+        val userPlanRef = userRef.collection("UsersPlans").document(planId)
+
+        showLoading()
+
+        // Etapa 1: Remover startAt do plano ativo
+        userPlanRef.update("startAt", null)
+            .addOnSuccessListener {
+                // Etapa 2: Atualizar os campos do usuário
+                userRef.update(
+                    mapOf(
+                        "requestPlanId" to planId,
+                        "planId" to null
+                    )
+                ).addOnSuccessListener {
+                    hideLoading()
+                    showSnackbar("Plano desativado para $userName")
+                    loadPendingUsers()
+                }.addOnFailureListener { e ->
+                    hideLoading()
+                    showSnackbar("Erro ao atualizar usuário: ${e.message}")
+                }
+            }
+            .addOnFailureListener { e ->
+                hideLoading()
+                showSnackbar("Erro ao desativar plano: ${e.message}")
+            }
+    }
+
+    private fun showLoading() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.recyclerView.alpha = 0.3f
+    }
+
+    private fun hideLoading() {
+        binding.progressBar.visibility = View.GONE
+        binding.recyclerView.alpha = 1f
+    }
+
 }
