@@ -132,3 +132,8 @@ fabric.properties
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
+
+# Custom folder
+/repo
+/keys
+.kotlin
