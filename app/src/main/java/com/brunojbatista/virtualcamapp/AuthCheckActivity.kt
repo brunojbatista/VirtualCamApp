@@ -29,9 +29,11 @@ class AuthCheckActivity : AppCompatActivity() {
 
         val appCheck = FirebaseAppCheck.getInstance()
         val providerFactory = if (BuildConfig.IS_DEBUG) {
+            showMessage("Usando PlayIntegrityAppCheckProviderFactory")
             Log.d("AppCheck", "Usando DebugAppCheckProviderFactory")
             DebugAppCheckProviderFactory.getInstance()
         } else {
+            showMessage("Usando PlayIntegrityAppCheckProviderFactory")
             Log.d("AppCheck", "Usando PlayIntegrityAppCheckProviderFactory")
             PlayIntegrityAppCheckProviderFactory.getInstance()
         }
