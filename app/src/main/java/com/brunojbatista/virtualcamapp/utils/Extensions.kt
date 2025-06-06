@@ -3,6 +3,9 @@ package com.brunojbatista.virtualcamapp.utils
 import android.app.Activity
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import android.view.View
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 
 fun Activity.showMessage(msg: String) {
     Toast.makeText(
@@ -10,6 +13,26 @@ fun Activity.showMessage(msg: String) {
         msg,
         Toast.LENGTH_LONG
     ).show()
+}
+
+fun Activity.showSnackbar(
+    message: String,
+    actionText: String? = null,
+    onUndo: (() -> Unit)? = null
+) {
+    val rootView: View = findViewById(android.R.id.content)
+    val snackbar = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG)
+
+    // Se quiser ação de desfazer
+    if (actionText != null && onUndo != null) {
+        snackbar.setAction(actionText) {
+            onUndo()
+        }
+        snackbar.setActionTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light))
+    }
+//    snackbar.setActionTextColor(Color.YELLOW)
+//    snackbar.view.setBackgroundColor(Color.DKGRAY)
+    snackbar.show()
 }
 
 fun checkUserLogged(
