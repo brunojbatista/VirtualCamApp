@@ -13,6 +13,7 @@ import com.brunojbatista.virtualcamapp.utils.showSnackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import android.view.View
+import com.google.firebase.firestore.ListenerRegistration
 
 class AdminActivity : AppCompatActivity() {
 
@@ -30,6 +31,7 @@ class AdminActivity : AppCompatActivity() {
 
     private lateinit var adapter: UserRequestAdapter
     private val users = mutableListOf<UserRequest>()
+    private var userListener: ListenerRegistration? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +40,12 @@ class AdminActivity : AppCompatActivity() {
         initializeToolbarUtil(binding.includeAdminToolbar, firebaseAuth)
 
         setupRecyclerView()
-        loadPendingUsers()
+        startListeningForUserRequests()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        userListener?.remove()
     }
 
     private fun setupRecyclerView() {
@@ -56,15 +63,32 @@ class AdminActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadPendingUsers() {
-        firestore.collection("Users")
-            .whereNotEqualTo("requestPlanId", null)
-            .get()
-            .addOnSuccessListener { result ->
-                val novosUsuarios = result.map { doc ->
-                    doc.toObject(UserRequest::class.java).apply { id = doc.id }
+    private fun startListeningForUserRequests() {
+        showLoading()
+
+        userListener = firestore.collection("Users")
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    hideLoading()
+                    showSnackbar("Erro ao ouvir mudanças: ${e.message}")
+                    return@addSnapshotListener
                 }
-                adapter.submitList(novosUsuarios)
+
+                if (snapshots == null || snapshots.isEmpty) {
+                    hideLoading()
+                    adapter.submitList(emptyList())
+                    return@addSnapshotListener
+                }
+
+                val usuariosPendentes = snapshots.documents.mapNotNull { doc ->
+                    val hasRequest = doc.data?.get("requestPlanId") != null
+                    if (hasRequest) {
+                        doc.toObject(UserRequest::class.java)?.apply { id = doc.id }
+                    } else null
+                }
+
+                adapter.submitList(usuariosPendentes)
+                hideLoading()
             }
     }
 
@@ -97,15 +121,14 @@ class AdminActivity : AppCompatActivity() {
                         deactivateUserPlan(userId, planId, user.name)
                         Log.d("AdminActivity", "Desfazendo o plano para o usuário selecionado: ${user.name}")
                     }
-                    loadPendingUsers()
                 }.addOnFailureListener { e ->
                     hideLoading()
-                    showSnackbar("Erro ao atualizar usuário: ${e.message}")
+                    Log.e("AdminActivity", "Erro ao ativar usuário", e)
                 }
             }
             .addOnFailureListener { e ->
                 hideLoading()
-                showSnackbar("Erro ao ativar plano: ${e.message}")
+                Log.e("AdminActivity", "Erro ao ativar usuário", e)
             }
     }
 
@@ -127,26 +150,27 @@ class AdminActivity : AppCompatActivity() {
                 ).addOnSuccessListener {
                     hideLoading()
                     showSnackbar("Plano desativado para $userName")
-                    loadPendingUsers()
                 }.addOnFailureListener { e ->
                     hideLoading()
-                    showSnackbar("Erro ao atualizar usuário: ${e.message}")
+                    Log.e("AdminActivity", "Erro ao desativar usuário", e)
                 }
             }
             .addOnFailureListener { e ->
                 hideLoading()
-                showSnackbar("Erro ao desativar plano: ${e.message}")
+                Log.e("AdminActivity", "Erro ao desativar usuário", e)
             }
     }
 
     private fun showLoading() {
-        binding.progressBar.visibility = View.VISIBLE
-        binding.recyclerView.alpha = 0.3f
+        /*binding.progressBar.visibility = View.VISIBLE
+        binding.recyclerView.alpha = 0.3f*/
+        binding.loadingOverlay.visibility = View.VISIBLE
     }
 
     private fun hideLoading() {
-        binding.progressBar.visibility = View.GONE
-        binding.recyclerView.alpha = 1f
+        /*binding.progressBar.visibility = View.GONE
+        binding.recyclerView.alpha = 1f*/
+        binding.loadingOverlay.visibility = View.GONE
     }
 
 }
