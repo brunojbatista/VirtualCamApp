@@ -137,3 +137,4 @@ fabric.properties
 /repo
 /keys
 .kotlin
+/app/release
